@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0057: 使用范围运算符
+csharp_style_prefer_range_operator = false
