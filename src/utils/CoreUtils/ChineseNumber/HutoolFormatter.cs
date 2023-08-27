@@ -3,7 +3,7 @@
 using System;
 using System.Text;
 
-namespace QingFeng.SimpleUtils
+namespace QingFeng.CoreUtils.ChineseNumber
 {
     /// <summary>
     /// 数字转中文类，包括：
@@ -11,7 +11,7 @@ namespace QingFeng.SimpleUtils
     /// 2. 数字转金额用的大写形式，比如：壹佰贰拾壹
     /// 3. 转金额形式，比如：壹佰贰拾壹整
     /// </summary>
-    public class NumberChineseFormatter
+    public class HutoolFormatter
     {
 
         // 中文形式，奇数位置是简体，偶数位置是记账繁体，0共用<br>
@@ -263,7 +263,7 @@ namespace QingFeng.SimpleUtils
                 f = ChineseToNumber(span.Slice(0, fi));
             }
 
-            return (f / 100m) + (y * 100 + j);
+            return f / 100m + (y * 100 + j);
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace QingFeng.SimpleUtils
             partValue = parts[1];
             if (partValue > 0)
             {
-                if ((partValue % 10 == 0 && parts[0] > 0))
+                if (partValue % 10 == 0 && parts[0] > 0)
                 {
                     // 如果"万"的个位是0，则补零，如十万零八千
                     AddPreZero(chineseStr);
@@ -332,7 +332,7 @@ namespace QingFeng.SimpleUtils
             partValue = parts[2];
             if (partValue > 0)
             {
-                if ((partValue % 10 == 0 && parts[1] > 0))
+                if (partValue % 10 == 0 && parts[1] > 0)
                 {
                     // 如果"万"的个位是0，则补零，如十万零八千
                     AddPreZero(chineseStr);
@@ -490,7 +490,7 @@ namespace QingFeng.SimpleUtils
                             // 百二 -> 一百二
                             unitNumber = 1;
                         }
-                        section += (unitNumber * unit.Value);
+                        section += unitNumber * unit.Value;
                     }
                     number = 0;
                 }
