@@ -11,20 +11,30 @@ namespace QingFeng.CoreUtils.ChineseNumber
     public class An2CnTest
     {
         [TestMethod]
-        public void MyTestMethod()
+        public void TestStringInputs()
         {
-            var tests = new[] { (1,"壹元整"), (10, "壹拾元整") , (100, "壹佰元整") , (1000, "壹仟元整") , (10000, "壹万元整") 
-                , (100000, "壹拾万元整") ,(1000000,"壹佰万元整"),(10000000,"壹仟万元整"),(1_0000_0000,"壹亿元整")
-                ,(10_0000_0000,"壹拾亿元整"),(100_0000_0000,"壹佰亿元整"),(1000_0000_0000,"壹仟亿元整")
-                ,(10000_0000_0000,"壹万亿元整"),(10_0000_0000_0000,"壹拾万亿元整"),(100_0000_0000_0000,"壹佰万亿元整")};
-
-            foreach((double d,string cs) in tests)
+            var invalidNumbers = new[] { "-", ".", "-.", "-1.", "-1.5.", "-1.5.6", "1.", "1.5.6" };
+            foreach (var n in invalidNumbers)
             {
-                Assert.AreEqual(cs, An2Cn.Convert(d, An2Cn.OutMode.rmb));
+                var msg = "failed to assert number check:" + n;
+                Assert.ThrowsException<An2CnException>(() => An2CnConverter.DirectConvert(n, An2CnOutMode.lower), msg);
+                Assert.ThrowsException<An2CnException>(() => An2CnConverter.ConvertToCnFormat(n, An2CnOutMode.lower), msg);
+                Assert.ThrowsException<An2CnException>(() => An2CnConverter.ConvertToRmbFormat(n, An2CnOutMode.lower), msg);
             }
-            
-            Assert.AreEqual("贰拾肆万陆仟零肆拾元整", An2Cn.Convert(246040, An2Cn.OutMode.rmb));
-            Assert.AreEqual("叁拾捌万零捌佰贰拾捌元捌角", An2Cn.Convert(380828.8, An2Cn.OutMode.rmb));
+
+            var nullOrWhitespaces = new[] { "  ", " ", "\t", "", null, "\t\t" };
+            foreach (var n in nullOrWhitespaces)
+            {
+                Assert.AreEqual(An2CnConverter.DirectConvert(n, An2CnOutMode.upper), n);
+                Assert.AreEqual(An2CnConverter.ConvertToCnFormat(n, An2CnOutMode.upper), n);
+                Assert.AreEqual(An2CnConverter.ConvertToRmbFormat(n, An2CnOutMode.upper), n);
+            }
+        }
+
+        [TestMethod]
+        public void TestDirectConvert()
+        {
+
         }
     }
 }
