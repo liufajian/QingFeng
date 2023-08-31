@@ -207,7 +207,7 @@ namespace QingFeng.CoreUtils.ChineseNumber
 
         #region----ConvertToRmbFmt----
 
-        private static string InnerConvertToRmbFormat(ReadOnlySpan<char> inputs, An2CnOutMode outMode, string negativeText)
+        private static string InnerConvertToRmbFormat(ReadOnlySpan<char> inputs, string negativeText)
         {
             // 判断正负
             var sign = "";
@@ -226,11 +226,11 @@ namespace QingFeng.CoreUtils.ChineseNumber
             {
                 sb.Append(sign);
 
-                return IntegerConvert(inputs, outMode, sb).Append("元整").ToString();
+                return IntegerConvert(inputs, An2CnOutMode.upper, sb).Append("元整").ToString();
             }
 
             //整数部分
-            var len_int = IntegerConvert(inputs.Slice(0, dotIndex), outMode, sb).Length;
+            var len_int = IntegerConvert(inputs.Slice(0, dotIndex), An2CnOutMode.upper, sb).Length;
 
             //小数部分
             var decPart = inputs.Slice(dotIndex + 1);
@@ -238,7 +238,7 @@ namespace QingFeng.CoreUtils.ChineseNumber
             {
                 decPart = decPart.Slice(0, 3);
             }
-            var len_dec = DecimalConvert(decPart, outMode, sb).Length - len_int;
+            var len_dec = DecimalConvert(decPart, An2CnOutMode.upper, sb).Length - len_int;
 
             if (len_dec == 1)
             {
@@ -288,26 +288,9 @@ namespace QingFeng.CoreUtils.ChineseNumber
         /// <param name="outMode">输出模式</param>
         /// <param name="negativeText">负号文字 如：负、(负数)</param>
         /// <returns></returns>
-        public static string ConvertToRmbFormat(double d, An2CnOutMode outMode, string negativeText = "负")
+        public static string ConvertToRmbFormat(decimal d, string negativeText = "负")
         {
-            if (double.IsNaN(d))
-            {
-                return "NaN";
-            }
-
-            return InnerConvertToRmbFormat(NumberToString(d).AsSpan(), outMode, negativeText);
-        }
-
-        /// <summary>
-        /// 阿拉伯数字转换成中文人民币格式
-        /// </summary>
-        /// <param name="d">数字</param>
-        /// <param name="outMode">输出模式</param>
-        /// <param name="negativeText">负号文字 如：负、(负数)</param>
-        /// <returns></returns>
-        public static string ConvertToRmbFormat(decimal d, An2CnOutMode outMode, string negativeText = "负")
-        {
-            return InnerConvertToRmbFormat(d.ToString().AsSpan(), outMode, negativeText);
+            return InnerConvertToRmbFormat(d.ToString().AsSpan(), negativeText);
         }
 
         /// <summary>
@@ -317,7 +300,7 @@ namespace QingFeng.CoreUtils.ChineseNumber
         /// <param name="outMode">输出模式</param>
         /// <param name="negativeText">负号文字 如：负、(负数)</param>
         /// <returns></returns>
-        public static string ConvertToRmbFormat(string s, An2CnOutMode outMode, string negativeText = "负")
+        public static string ConvertToRmbFormat(string s, string negativeText = "负")
         {
             if (string.IsNullOrWhiteSpace(s))
             {
@@ -328,7 +311,7 @@ namespace QingFeng.CoreUtils.ChineseNumber
 
             CheckInputIsValid(ss);
 
-            return InnerConvertToRmbFormat(ss, outMode, negativeText);
+            return InnerConvertToRmbFormat(ss, negativeText);
         }
 
         #endregion
