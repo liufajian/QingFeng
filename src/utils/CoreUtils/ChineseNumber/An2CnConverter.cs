@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Text;
+
+//from https://github.com/Ailln/cn2an
 
 namespace QingFeng.CoreUtils.ChineseNumber
 {
