@@ -163,7 +163,7 @@ namespace QingFeng.CoreUtils.ChineseNumber
         /// <param name="negativeText">负号文字 如：负、(负数)</param>
         /// <returns></returns>
         /// <exception cref="An2CnException"></exception>
-        public static string ConvertToCnNumbers(double d, An2CnOutMode outMode, string negativeText = "负")
+        public static string ConvertToCnFormat(double d, An2CnOutMode outMode, string negativeText = "负")
         {
             return double.IsNaN(d) ? "NaN" : InnerConvertToCnFormat(NumberToString(d).AsSpan(), outMode, negativeText);
         }
@@ -176,7 +176,7 @@ namespace QingFeng.CoreUtils.ChineseNumber
         /// <param name="negativeText">负号文字 如：负、(负数)</param>
         /// <returns></returns>
         /// <exception cref="An2CnException"></exception>
-        public static string ConvertToCnNumbers(decimal d, An2CnOutMode outMode, string negativeText = "负")
+        public static string ConvertToCnFormat(decimal d, An2CnOutMode outMode, string negativeText = "负")
         {
             return InnerConvertToCnFormat(d.ToString().AsSpan(), outMode, negativeText);
         }
@@ -234,9 +234,9 @@ namespace QingFeng.CoreUtils.ChineseNumber
 
             //小数部分
             var decPart = inputs.Slice(dotIndex + 1);
-            if (decPart.Length > 3)
+            if (decPart.Length > 2)
             {
-                decPart = decPart.Slice(0, 3);
+                decPart = decPart.Slice(0, 2);
             }
             var len_dec = DecimalConvert(decPart, An2CnOutMode.upper, sb).Length - len_int;
 
@@ -403,6 +403,11 @@ namespace QingFeng.CoreUtils.ChineseNumber
             if (inputs.Length < 1)
             {
                 return sb.Append('零');
+            }
+
+            if (inputs.Length == 1)
+            {
+                return sb.Append(numeral_list[inputs[0] - '0']);
             }
 
             var len_integer = inputs.Length;

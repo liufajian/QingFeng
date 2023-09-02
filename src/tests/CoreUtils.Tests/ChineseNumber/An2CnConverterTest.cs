@@ -1,14 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace QingFeng.CoreUtils.ChineseNumber
+﻿namespace QingFeng.CoreUtils.ChineseNumber
 {
     [TestClass]
-    public class An2CnTest
+    public class An2CnConverterTest
     {
         [TestMethod]
         public void TestStringInputs()
@@ -30,7 +23,7 @@ namespace QingFeng.CoreUtils.ChineseNumber
                 Assert.AreEqual(An2CnConverter.ConvertToRmbFormat(n), n);
             }
 
-            Assert.AreEqual(An2CnConverter.DirectConvert(double.NaN, An2CnOutMode.upper), "Nan");
+            Assert.AreEqual(An2CnConverter.DirectConvert(double.NaN, An2CnOutMode.upper), "NaN");
         }
 
         [TestMethod]
@@ -46,6 +39,10 @@ namespace QingFeng.CoreUtils.ChineseNumber
             foreach ((double d, string cs) in tests)
             {
                 Assert.AreEqual(cs, An2CnConverter.ConvertToRmbFormat((decimal)d));
+                if (d != 0)
+                {
+                    Assert.AreEqual("(负数)" + cs, An2CnConverter.ConvertToRmbFormat(-(decimal)d, "(负数)"));
+                }
             }
 
             var tests2 = new (decimal, string)[]{(0m,"零元整"),(1,"壹元整"),(10,"壹拾元整"),(110,"壹佰壹拾元整"),(1000,"壹仟元整"),(1001,"壹仟零壹元整")
@@ -63,7 +60,17 @@ namespace QingFeng.CoreUtils.ChineseNumber
             foreach ((decimal d, string cs) in tests2)
             {
                 Assert.AreEqual(cs, An2CnConverter.ConvertToRmbFormat(d));
+                if (d != 0)
+                {
+                    Assert.AreEqual("(负数)" + cs, An2CnConverter.ConvertToRmbFormat(-d, "(负数)"));
+                }
             }
+        }
+
+        [TestMethod]
+        public void TestConvertToRmbFormat2()
+        {
+            Assert.AreEqual("壹元整", An2CnConverter.ConvertToRmbFormat(1.001m));
         }
 
         [TestMethod]
@@ -90,6 +97,12 @@ namespace QingFeng.CoreUtils.ChineseNumber
             Assert.AreEqual(An2CnConverter.DirectConvert("98712354560.783", An2CnOutMode.upper), "玖捌柒壹贰叁伍肆伍陆零点柒捌叁");
             Assert.AreEqual(An2CnConverter.DirectConvert("-98712354560.783", An2CnOutMode.upper, "负"), "负玖捌柒壹贰叁伍肆伍陆零点柒捌叁");
             Assert.AreEqual(An2CnConverter.DirectConvert("-98712354560.783", An2CnOutMode.upper, "负负数"), "负负数玖捌柒壹贰叁伍肆伍陆零点柒捌叁");
+        }
+
+        [TestMethod]
+        public void TestConvertToCnFormat()
+        {
+
         }
     }
 }
